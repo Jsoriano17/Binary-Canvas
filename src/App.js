@@ -1,19 +1,16 @@
-import CanvasBoard from "./components/CanvasBoard";
-import styled from 'styled-components';
+import { Route, Switch } from 'react-router';
+import ArtPage from './components/ArtPage';
+import Home from "./components/Home";
+import NotFound from './components/NotFound';
 
 function App() {
   return (
-    <Container>
-      <CanvasBoard />
-    </Container>
+    <Switch>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/art" component={ArtPage} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
 export default App;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex; 
-  flex-direction: row; 
-`
