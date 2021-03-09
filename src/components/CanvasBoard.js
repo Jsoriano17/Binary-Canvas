@@ -60,7 +60,7 @@ const CanvasBoard = ({color}) => {
 export default CanvasBoard
 
 const Container = styled.div`
-    width: 90%;
+    width: 70%;
     height: 100%;
 `
 
