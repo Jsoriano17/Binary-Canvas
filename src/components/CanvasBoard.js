@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-const CanvasBoard = ({color}) => {
+const CanvasBoard = ({color,brushSize}) => {
 
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
@@ -26,6 +26,7 @@ const CanvasBoard = ({color}) => {
     const startDrawing = ({nativeEvent}) => {
         const {offsetX, offsetY} = nativeEvent
         contextRef.current.strokeStyle = color
+        contextRef.current.lineWidth = brushSize
         contextRef.current.beginPath()
         contextRef.current.moveTo(offsetX,offsetY)
         setIsDrawing(true)
@@ -60,7 +61,7 @@ const CanvasBoard = ({color}) => {
 export default CanvasBoard
 
 const Container = styled.div`
-    width: 70%;
+    width: 85%;
     height: 100%;
 `
 
