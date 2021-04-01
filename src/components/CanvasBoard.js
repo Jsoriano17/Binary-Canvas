@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-const CanvasBoard = ({color,brushSize}) => {
+const CanvasBoard = ({color,brushSize, canvasSize}) => {
 
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
     const [isDrawing, setIsDrawing] = useState(false)
+    const [restoreArray, setRestoreArray] = useState([])
+    const [arrIdx, setArrIdx] = useState(-1)
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        canvas.width = window.innerWidth * 2
-        canvas.height = window.innerHeight * 2
+        canvas.width = canvasSize.width
+        canvas.height = canvasSize.height
         canvas.style.width = `${window.innerWidth}px`
         canvas.style.height = `${window.innerHeight}px`
 
@@ -21,7 +23,7 @@ const CanvasBoard = ({color,brushSize}) => {
         context.strokeStyle = 'black'
         context.lineWidth = 5
         contextRef.current = context
-    }, [])
+    }, [canvasSize])
 
     const startDrawing = ({nativeEvent}) => {
         const {offsetX, offsetY} = nativeEvent
@@ -29,12 +31,17 @@ const CanvasBoard = ({color,brushSize}) => {
         contextRef.current.lineWidth = brushSize
         contextRef.current.beginPath()
         contextRef.current.moveTo(offsetX,offsetY)
+        contextRef.current.lineTo(offsetX,offsetY)
+        contextRef.current.stroke()
         setIsDrawing(true)
     }
 
     const finishDrawing = () => {
         contextRef.current.closePath()
         setIsDrawing(false)
+        setRestoreArray([...restoreArray, contextRef.current.getImageData(0, 0 ,canvasSize.width, canvasSize.height)])
+        setArrIdx(arrIdx + 1)
+        console.log(restoreArray)
     }
 
     const draw = ({nativeEvent}) => {
@@ -46,14 +53,30 @@ const CanvasBoard = ({color,brushSize}) => {
         contextRef.current.stroke()
     }
 
+    const undoLast = () => {
+        if ( arrIdx <= 0 ) {
+            return
+        }
+
+        let oldArr = [...restoreArray]
+        oldArr.pop()
+        setArrIdx(arrIdx - 1)
+        setRestoreArray(oldArr)
+        contextRef.current.putImageData(restoreArray[arrIdx], 0, 0)
+        console.log(restoreArray)
+    }
+
     return (
         <Container>
             <StyledCanvas
                 onMouseDown={startDrawing}
                 onMouseUp={finishDrawing} 
-                onMouseMove={draw} 
+                onMouseMove={draw}
                 ref={canvasRef}
             />
+            <button onClick={() => undoLast()}>
+                undo
+            </button>
         </Container>
     )
 }

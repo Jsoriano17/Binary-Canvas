@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { SketchPicker } from 'react-color';
 
-const ToolBar = ({changeColor,changeBrushShape,changeBrushSize,color,brushSize}) => {
+const ToolBar = ({changeColor,changeBrushShape,changeBrushSize,color,brushSize, clearCanvas}) => {
     const [background, setBackground] = useState('#000000')
 
     const handleChangeComplete = (color) => {
@@ -38,6 +38,13 @@ const ToolBar = ({changeColor,changeBrushShape,changeBrushSize,color,brushSize})
                 <StyledInput type="number" onChange={handleChange} placeholder={`${brushSize}`}/>
                 <p>px</p>
             </StyledForm>
+            <button onClick={() => clearCanvas()}>
+                clear canvas
+            </button>
+
+            <button>
+                undo
+            </button>
         </Container>
     )
 }
